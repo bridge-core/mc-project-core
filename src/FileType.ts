@@ -243,33 +243,4 @@ export abstract class FileType<TSetupArg> {
 		const language = this.get(filePath)?.meta?.language
 		return language ? language === 'json' : filePath.endsWith('.json')
 	}
-
-	/**
-	 * Get a JSON schema array that can be used to set Monaco's JSON defaults
-	 */
-	getMonacoSchemaEntries() {
-		return <IMonacoSchemaArrayEntry[]>this.fileTypes
-			.map(({ detect = {}, schema }) => {
-				if (!detect.matcher) return null
-
-				const packTypes =
-					detect?.packType === undefined
-						? []
-						: Array.isArray(detect?.packType)
-						? detect?.packType
-						: [detect?.packType]
-
-				return {
-					fileMatch: this.prefixMatchers(
-						packTypes,
-						Array.isArray(detect.matcher)
-							? [...detect.matcher]
-							: [detect.matcher]
-					),
-					uri: schema,
-				}
-			})
-			.filter((schemaEntry) => schemaEntry !== null)
-			.flat()
-	}
 }
