@@ -143,6 +143,9 @@ export abstract class ProjectConfig {
 		return this.data
 	}
 
+	/**
+	 * TODO: These functions should be a part of PackType.ts. They don't really make sense here
+	 */
 	getPackRoot(packId: TPackTypeId) {
 		return this.data.packs?.[packId] ?? defaultPackPaths[packId]
 	}
