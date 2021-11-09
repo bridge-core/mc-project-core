@@ -91,7 +91,9 @@ export interface IConfigJson {
 		v1CompatMode?: boolean
 	}
 
-	compiler?: any
+	compiler?: {
+		plugins: (string | [string, any])[]
+	}
 }
 
 interface IPackDefinition {

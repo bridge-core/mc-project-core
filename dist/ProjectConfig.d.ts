@@ -23,7 +23,9 @@ export interface IConfigJson {
         darkTheme?: string;
         v1CompatMode?: boolean;
     };
-    compiler?: any;
+    compiler?: {
+        plugins: (string | [string, any])[];
+    };
 }
 interface IPackDefinition {
     type?: string;
