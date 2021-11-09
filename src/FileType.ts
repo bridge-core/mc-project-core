@@ -69,6 +69,10 @@ export abstract class FileType<TSetupArg> {
 
 	constructor(protected projectConfig?: ProjectConfig) {}
 
+	get all() {
+		return this.fileTypes.concat([...this.pluginFileTypes.values()])
+	}
+
 	setProjectConfig(projectConfig: ProjectConfig) {
 		this.projectConfig = projectConfig
 	}
@@ -97,7 +101,7 @@ export abstract class FileType<TSetupArg> {
 	get(filePath?: string, searchFileType?: string) {
 		const extension = filePath ? extname(filePath) : null
 
-		for (const fileType of this.fileTypes) {
+		for (const fileType of this.all) {
 			if (searchFileType !== undefined && searchFileType === fileType.id)
 				return fileType
 			else if (!filePath) continue
@@ -171,7 +175,7 @@ export abstract class FileType<TSetupArg> {
 	getIds() {
 		const ids = []
 
-		for (const fileType of this.fileTypes) {
+		for (const fileType of this.all) {
 			ids.push(fileType.id)
 		}
 
@@ -195,7 +199,7 @@ export abstract class FileType<TSetupArg> {
 
 		// 1. Guess based on file extension
 		const extension = `.${fileHandle.name.split('.').pop()!}`
-		for (const { detect = {} } of this.fileTypes) {
+		for (const { detect = {} } of this.all) {
 			if (!detect.scope) continue
 			if (detect.fileExtensions?.includes(extension))
 				return getStartPath(detect.scope)
@@ -212,7 +216,7 @@ export abstract class FileType<TSetupArg> {
 			return null
 		}
 
-		for (const { type, detect } of this.fileTypes) {
+		for (const { type, detect } of this.all) {
 			if (typeof type === 'string' && type !== 'json') continue
 
 			const { scope, fileContent } = detect ?? {}

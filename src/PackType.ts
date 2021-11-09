@@ -25,7 +25,7 @@ export abstract class PackType<TSetupArg> {
 	abstract setup(arg: TSetupArg): Promise<void>
 
 	get all() {
-		return [...this.packTypes].concat(
+		return this.packTypes.concat(
 			...Array.from(this.extensionPackTypes.values())
 		)
 	}
