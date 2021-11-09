@@ -72,7 +72,7 @@ export abstract class FileType<TSetupArg> {
 	 * @param isMatch Should return true if the specified string matches the given glob pattern.
 	 */
 	constructor(
-		protected projectConfig: ProjectConfig,
+		protected projectConfig: ProjectConfig | undefined,
 		protected isMatch: (str: string, pattern: string | string[]) => boolean
 	) {}
 
