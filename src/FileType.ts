@@ -1,7 +1,6 @@
 import type { ProjectConfig } from './ProjectConfig'
 import type { TPackTypeId } from './PackType'
 import { extname } from 'path-browserify'
-import { isMatch } from 'micromatch'
 import json5 from 'json5'
 
 type TCompareOperator = '>' | '>=' | '=' | '<' | '<='
@@ -67,7 +66,15 @@ export abstract class FileType<TSetupArg> {
 	protected pluginFileTypes = new Set<IFileType>()
 	protected fileTypes: IFileType[] = []
 
-	constructor(protected projectConfig?: ProjectConfig) {}
+	/**
+	 *
+	 * @param projectConfig
+	 * @param isMatch Should return true if the specified string matches the given glob pattern.
+	 */
+	constructor(
+		protected projectConfig: ProjectConfig,
+		protected isMatch: (str: string, pattern: string | string[]) => boolean
+	) {}
 
 	get all() {
 		return this.fileTypes.concat([...this.pluginFileTypes.values()])
@@ -139,7 +146,10 @@ export abstract class FileType<TSetupArg> {
 					return fileType
 			} else if (hasMatcher) {
 				if (
-					isMatch(filePath, this.prefixMatchers(packTypes, matcher!))
+					this.isMatch(
+						filePath,
+						this.prefixMatchers(packTypes, matcher!)
+					)
 				) {
 					return fileType
 				}

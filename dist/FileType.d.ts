@@ -49,10 +49,11 @@ export interface IMonacoSchemaArrayEntry {
     schema?: any;
 }
 export declare abstract class FileType<TSetupArg> {
-    protected projectConfig?: ProjectConfig | undefined;
+    protected projectConfig: ProjectConfig;
+    protected isMatch: (str: string, pattern: string | string[]) => boolean;
     protected pluginFileTypes: Set<IFileType>;
     protected fileTypes: IFileType[];
-    constructor(projectConfig?: ProjectConfig | undefined);
+    constructor(projectConfig: ProjectConfig, isMatch: (str: string, pattern: string | string[]) => boolean);
     get all(): IFileType[];
     setProjectConfig(projectConfig: ProjectConfig): void;
     abstract setup(arg: TSetupArg): Promise<void>;

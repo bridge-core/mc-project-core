@@ -9,7 +9,7 @@ export declare type TPackTypeId = 'behaviorPack' | 'resourcePack' | 'skinPack' |
 export declare abstract class PackType<TSetupArg> {
     protected projectConfig: ProjectConfig;
     protected packTypes: IPackType[];
-    protected extensionPackTypes: Map<string, IPackType>;
+    protected extensionPackTypes: Set<IPackType>;
     constructor(projectConfig: ProjectConfig);
     abstract setup(arg: TSetupArg): Promise<void>;
     get all(): IPackType[];

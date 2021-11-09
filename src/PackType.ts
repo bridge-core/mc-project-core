@@ -1,5 +1,5 @@
 import type { ProjectConfig } from './ProjectConfig'
-import { v4 as uuid } from 'uuid'
+
 /**
  * Describes the structure of a pack definition
  */
@@ -18,7 +18,7 @@ export type TPackTypeId =
 
 export abstract class PackType<TSetupArg> {
 	protected packTypes: IPackType[] = []
-	protected extensionPackTypes = new Map<string, IPackType>()
+	protected extensionPackTypes = new Set<IPackType>()
 
 	constructor(protected projectConfig: ProjectConfig) {}
 
@@ -47,11 +47,10 @@ export abstract class PackType<TSetupArg> {
 	}
 
 	addExtensionPackType(packType: IPackType) {
-		const id = uuid()
-		this.extensionPackTypes.set(id, packType)
+		this.extensionPackTypes.add(packType)
 
 		return {
-			dispose: () => this.extensionPackTypes.delete(id),
+			dispose: () => this.extensionPackTypes.delete(packType),
 		}
 	}
 }
