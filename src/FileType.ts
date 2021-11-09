@@ -2,7 +2,7 @@ import type { ProjectConfig } from './ProjectConfig'
 import type { TPackTypeId } from './PackType'
 import { extname } from 'path-browserify'
 import { isMatch } from 'micromatch'
-import { parse } from 'json5'
+import json5 from 'json5'
 
 type TCompareOperator = '>' | '>=' | '=' | '<' | '<='
 
@@ -211,7 +211,7 @@ export abstract class FileType<TSetupArg> {
 		const file = await fileHandle.getFile()
 		let json: any
 		try {
-			json = parse(await file.text())
+			json = json5.parse(await file.text())
 		} catch {
 			return null
 		}

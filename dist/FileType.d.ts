@@ -53,6 +53,7 @@ export declare abstract class FileType<TSetupArg> {
     protected pluginFileTypes: Set<IFileType>;
     protected fileTypes: IFileType[];
     constructor(projectConfig?: ProjectConfig | undefined);
+    get all(): IFileType[];
     setProjectConfig(projectConfig: ProjectConfig): void;
     abstract setup(arg: TSetupArg): Promise<void>;
     addPluginFileType(fileDef: IFileType): {
@@ -69,6 +70,5 @@ export declare abstract class FileType<TSetupArg> {
     }): Promise<string | null>;
     getId(filePath: string): string;
     isJsonFile(filePath: string): boolean;
-    getMonacoSchemaEntries(): IMonacoSchemaArrayEntry[];
 }
 export {};

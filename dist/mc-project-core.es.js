@@ -1,6 +1,6 @@
 import { extname, join, resolve } from "path-browserify";
 import { isMatch } from "micromatch";
-import { parse } from "json5";
+import json5 from "json5";
 var getRandomValues;
 var rnds8 = new Uint8Array(16);
 function rng() {
@@ -49,7 +49,7 @@ class PackType {
     this.extensionPackTypes = new Map();
   }
   get all() {
-    return [...this.packTypes].concat(...Array.from(this.extensionPackTypes.values()));
+    return this.packTypes.concat(...Array.from(this.extensionPackTypes.values()));
   }
   getFromId(packId) {
     return this.all.find((packType) => packType.id === packId);
@@ -80,6 +80,9 @@ class FileType {
     this.pluginFileTypes = new Set();
     this.fileTypes = [];
   }
+  get all() {
+    return this.fileTypes.concat([...this.pluginFileTypes.values()]);
+  }
   setProjectConfig(projectConfig) {
     this.projectConfig = projectConfig;
   }
@@ -99,7 +102,7 @@ class FileType {
   get(filePath, searchFileType) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
     const extension = filePath ? extname(filePath) : null;
-    for (const fileType of this.fileTypes) {
+    for (const fileType of this.all) {
       if (searchFileType !== void 0 && searchFileType === fileType.id)
         return fileType;
       else if (!filePath)
@@ -140,7 +143,7 @@ class FileType {
   }
   getIds() {
     const ids = [];
-    for (const fileType of this.fileTypes) {
+    for (const fileType of this.all) {
       ids.push(fileType.id);
     }
     return ids;
@@ -154,7 +157,7 @@ class FileType {
       return startPath;
     };
     const extension = `.${fileHandle.name.split(".").pop()}`;
-    for (const { detect = {} } of this.fileTypes) {
+    for (const { detect = {} } of this.all) {
       if (!detect.scope)
         continue;
       if ((_a = detect.fileExtensions) == null ? void 0 : _a.includes(extension))
@@ -165,11 +168,11 @@ class FileType {
     const file = await fileHandle.getFile();
     let json;
     try {
-      json = parse(await file.text());
+      json = json5.parse(await file.text());
     } catch {
       return null;
     }
-    for (const { type, detect } of this.fileTypes) {
+    for (const { type, detect } of this.all) {
       if (typeof type === "string" && type !== "json")
         continue;
       const { scope, fileContent } = detect != null ? detect : {};
@@ -187,17 +190,6 @@ class FileType {
     var _a, _b;
     const language = (_b = (_a = this.get(filePath)) == null ? void 0 : _a.meta) == null ? void 0 : _b.language;
     return language ? language === "json" : filePath.endsWith(".json");
-  }
-  getMonacoSchemaEntries() {
-    return this.fileTypes.map(({ detect = {}, schema }) => {
-      if (!detect.matcher)
-        return null;
-      const packTypes = (detect == null ? void 0 : detect.packType) === void 0 ? [] : Array.isArray(detect == null ? void 0 : detect.packType) ? detect == null ? void 0 : detect.packType : [detect == null ? void 0 : detect.packType];
-      return {
-        fileMatch: this.prefixMatchers(packTypes, Array.isArray(detect.matcher) ? [...detect.matcher] : [detect.matcher]),
-        uri: schema
-      };
-    }).filter((schemaEntry) => schemaEntry !== null).flat();
   }
 }
 const defaultPackPaths = {
