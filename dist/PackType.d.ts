@@ -1,4 +1,4 @@
-import type { ProjectConfig } from './ProjectConfig';
+import { ProjectConfig } from './ProjectConfig';
 export interface IPackType {
     id: TPackTypeId;
     matcher: string | string[];
@@ -7,10 +7,11 @@ export interface IPackType {
 }
 export declare type TPackTypeId = 'behaviorPack' | 'resourcePack' | 'skinPack' | 'worldTemplate';
 export declare abstract class PackType<TSetupArg> {
-    protected projectConfig: ProjectConfig;
+    protected projectConfig: ProjectConfig | undefined;
     protected packTypes: IPackType[];
     protected extensionPackTypes: Set<IPackType>;
-    constructor(projectConfig: ProjectConfig);
+    constructor(projectConfig: ProjectConfig | undefined);
+    setProjectConfig(projectConfig: ProjectConfig): void;
     abstract setup(arg: TSetupArg): Promise<void>;
     get all(): IPackType[];
     getFromId(packId: TPackTypeId): IPackType | undefined;

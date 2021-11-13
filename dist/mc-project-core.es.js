@@ -1,10 +1,70 @@
-import { extname, join, resolve } from "path-browserify";
+import { join, resolve, extname } from "path-browserify";
 import json5 from "json5";
+const defaultPackPaths = {
+  behaviorPack: "./BP",
+  resourcePack: "./RP",
+  skinPack: "./SP",
+  worldTemplate: "./WT"
+};
+class ProjectConfig {
+  constructor(basePath) {
+    this.basePath = basePath;
+    this.data = {};
+  }
+  async refreshConfig() {
+    try {
+      this.data = await this.readConfig();
+    } catch {
+      this.data = {};
+    }
+  }
+  async setup() {
+    await this.refreshConfig();
+  }
+  get() {
+    return this.data;
+  }
+  getPackRoot(packId) {
+    var _a, _b;
+    return (_b = (_a = this.data.packs) == null ? void 0 : _a[packId]) != null ? _b : defaultPackPaths[packId];
+  }
+  resolvePackPath(packId, filePath) {
+    if (!filePath && !packId)
+      return this.basePath;
+    else if (!packId && filePath)
+      return join(this.basePath, filePath);
+    else if (!filePath && packId)
+      return resolve(this.basePath, `${this.getPackRoot(packId)}`);
+    return resolve(this.basePath, `${this.getPackRoot(packId)}/${filePath}`);
+  }
+  getAvailablePackPaths() {
+    var _a;
+    const paths = [];
+    for (const packId of Object.keys((_a = this.data.packs) != null ? _a : {})) {
+      paths.push(this.resolvePackPath(packId));
+    }
+    return paths;
+  }
+  getAvailablePacks() {
+    var _a;
+    const paths = {};
+    for (const packId in (_a = this.data.packs) != null ? _a : {}) {
+      paths[packId] = this.resolvePackPath(packId);
+    }
+    return paths;
+  }
+  async save() {
+    await this.writeConfig(this.data);
+  }
+}
 class PackType {
   constructor(projectConfig) {
     this.projectConfig = projectConfig;
     this.packTypes = [];
     this.extensionPackTypes = new Set();
+  }
+  setProjectConfig(projectConfig) {
+    this.projectConfig = projectConfig;
   }
   get all() {
     return this.packTypes.concat(...Array.from(this.extensionPackTypes.values()));
@@ -13,7 +73,8 @@ class PackType {
     return this.all.find((packType) => packType.id === packId);
   }
   get(filePath) {
-    const packTypes = this.projectConfig.getAvailablePacks();
+    var _a, _b;
+    const packTypes = (_b = (_a = this.projectConfig) == null ? void 0 : _a.getAvailablePacks()) != null ? _b : defaultPackPaths;
     for (const packId in packTypes) {
       if (filePath.startsWith(packTypes[packId])) {
         return this.getFromId(packId);
@@ -148,63 +209,6 @@ class FileType {
     var _a, _b;
     const language = (_b = (_a = this.get(filePath)) == null ? void 0 : _a.meta) == null ? void 0 : _b.language;
     return language ? language === "json" : filePath.endsWith(".json");
-  }
-}
-const defaultPackPaths = {
-  behaviorPack: "./BP",
-  resourcePack: "./RP",
-  skinPack: "./SP",
-  worldTemplate: "./WT"
-};
-class ProjectConfig {
-  constructor(basePath) {
-    this.basePath = basePath;
-    this.data = {};
-  }
-  async refreshConfig() {
-    try {
-      this.data = await this.readConfig();
-    } catch {
-      this.data = {};
-    }
-  }
-  async setup() {
-    await this.refreshConfig();
-  }
-  get() {
-    return this.data;
-  }
-  getPackRoot(packId) {
-    var _a, _b;
-    return (_b = (_a = this.data.packs) == null ? void 0 : _a[packId]) != null ? _b : defaultPackPaths[packId];
-  }
-  resolvePackPath(packId, filePath) {
-    if (!filePath && !packId)
-      return this.basePath;
-    else if (!packId && filePath)
-      return join(this.basePath, filePath);
-    else if (!filePath && packId)
-      return resolve(this.basePath, `${this.getPackRoot(packId)}`);
-    return resolve(this.basePath, `${this.getPackRoot(packId)}/${filePath}`);
-  }
-  getAvailablePackPaths() {
-    var _a;
-    const paths = [];
-    for (const packId of Object.keys((_a = this.data.packs) != null ? _a : {})) {
-      paths.push(this.resolvePackPath(packId));
-    }
-    return paths;
-  }
-  getAvailablePacks() {
-    var _a;
-    const paths = {};
-    for (const packId in (_a = this.data.packs) != null ? _a : {}) {
-      paths[packId] = this.resolvePackPath(packId);
-    }
-    return paths;
-  }
-  async save() {
-    await this.writeConfig(this.data);
   }
 }
 export { FileType, PackType, ProjectConfig, defaultPackPaths };

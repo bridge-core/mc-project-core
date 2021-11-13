@@ -1,4 +1,4 @@
-import type { ProjectConfig } from './ProjectConfig'
+import { defaultPackPaths, ProjectConfig } from './ProjectConfig'
 
 /**
  * Describes the structure of a pack definition
@@ -20,7 +20,11 @@ export abstract class PackType<TSetupArg> {
 	protected packTypes: IPackType[] = []
 	protected extensionPackTypes = new Set<IPackType>()
 
-	constructor(protected projectConfig: ProjectConfig) {}
+	constructor(protected projectConfig: ProjectConfig | undefined) {}
+
+	setProjectConfig(projectConfig: ProjectConfig) {
+		this.projectConfig = projectConfig
+	}
 
 	abstract setup(arg: TSetupArg): Promise<void>
 
@@ -34,7 +38,8 @@ export abstract class PackType<TSetupArg> {
 		return this.all.find((packType) => packType.id === packId)
 	}
 	get(filePath: string) {
-		const packTypes = this.projectConfig.getAvailablePacks()
+		const packTypes =
+			this.projectConfig?.getAvailablePacks() ?? defaultPackPaths
 
 		for (const packId in packTypes) {
 			if (filePath.startsWith(packTypes[packId])) {
