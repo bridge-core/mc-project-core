@@ -12,11 +12,7 @@ class ProjectConfig {
     this.data = {};
   }
   async refreshConfig() {
-    try {
-      this.data = await this.readConfig();
-    } catch {
-      this.data = {};
-    }
+    this.data = await this.readConfig();
   }
   async setup() {
     await this.refreshConfig();
@@ -34,7 +30,7 @@ class ProjectConfig {
     else if (!packId && filePath)
       return join(this.basePath, filePath);
     else if (!filePath && packId)
-      return resolve(this.basePath, `${this.getPackRoot(packId)}`);
+      return resolve(this.basePath, this.getPackRoot(packId));
     return resolve(this.basePath, `${this.getPackRoot(packId)}/${filePath}`);
   }
   getAvailablePackPaths() {

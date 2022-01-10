@@ -130,11 +130,7 @@ export abstract class ProjectConfig {
 
 	async refreshConfig() {
 		// Update this.data from config on disk
-		try {
-			this.data = await this.readConfig()
-		} catch {
-			this.data = {}
-		}
+		this.data = await this.readConfig()
 	}
 
 	async setup() {
@@ -155,7 +151,7 @@ export abstract class ProjectConfig {
 		if (!filePath && !packId) return this.basePath
 		else if (!packId && filePath) return join(this.basePath, filePath)
 		else if (!filePath && packId)
-			return resolve(this.basePath, `${this.getPackRoot(packId)}`)
+			return resolve(this.basePath, this.getPackRoot(packId))
 
 		return resolve(
 			this.basePath,
