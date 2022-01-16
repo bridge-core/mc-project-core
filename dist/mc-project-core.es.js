@@ -1,5 +1,6 @@
 import { join, resolve, extname } from "path-browserify";
 import json5 from "json5";
+import { hasAnyPath } from "bridge-common-utils";
 const defaultPackPaths = {
   behaviorPack: "./BP",
   resourcePack: "./RP",
@@ -192,6 +193,8 @@ class FileType {
         continue;
       const { scope, fileContent } = detect != null ? detect : {};
       if (!scope || !fileContent)
+        continue;
+      if (!hasAnyPath(json, fileContent))
         continue;
       return getStartPath(scope);
     }

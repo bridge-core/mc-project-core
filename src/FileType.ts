@@ -2,6 +2,7 @@ import type { ProjectConfig } from './ProjectConfig'
 import type { TPackTypeId } from './PackType'
 import { extname } from 'path-browserify'
 import json5 from 'json5'
+import { hasAnyPath } from 'bridge-common-utils'
 
 type TCompareOperator = '>' | '>=' | '=' | '<' | '<='
 
@@ -232,8 +233,7 @@ export abstract class FileType<TSetupArg> {
 			const { scope, fileContent } = detect ?? {}
 			if (!scope || !fileContent) continue
 
-			// TODO: RE-ENABLE
-			// if (!hasAnyPath(json, fileContent)) continue
+			if (!hasAnyPath(json, fileContent)) continue
 
 			return getStartPath(scope)
 		}
