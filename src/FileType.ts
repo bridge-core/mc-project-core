@@ -1,6 +1,6 @@
 import type { ProjectConfig } from './ProjectConfig'
 import type { TPackTypeId } from './PackType'
-import { extname } from 'path-browserify'
+import { extname, join } from 'path-browserify'
 import json5 from 'json5'
 import { hasAnyPath } from 'bridge-common-utils'
 
@@ -201,11 +201,17 @@ export abstract class FileType<TSetupArg> {
 		getFile: () => Promise<File>
 	}) {
 		// Helper function
-		const getStartPath = (scope: string | string[]) => {
+		const getStartPath = (
+			scope: string | string[],
+			packId: TPackTypeId
+		) => {
 			let startPath = Array.isArray(scope) ? scope[0] : scope
 			if (!startPath.endsWith('/')) startPath += '/'
 
-			return startPath
+			const packPath =
+				this.projectConfig?.getPackRoot(packId) ?? './unknown'
+
+			return join(packPath, startPath)
 		}
 
 		// 1. Guess based on file extension
@@ -213,7 +219,12 @@ export abstract class FileType<TSetupArg> {
 		for (const { detect = {} } of this.all) {
 			if (!detect.scope) continue
 			if (detect.fileExtensions?.includes(extension))
-				return getStartPath(detect.scope)
+				return getStartPath(
+					detect.scope,
+					Array.isArray(detect.packType)
+						? detect.packType[0]
+						: detect.packType ?? 'behaviorPack'
+				)
 		}
 
 		if (!fileHandle.name.endsWith('.json')) return null
@@ -230,12 +241,19 @@ export abstract class FileType<TSetupArg> {
 		for (const { type, detect } of this.all) {
 			if (typeof type === 'string' && type !== 'json') continue
 
-			const { scope, fileContent } = detect ?? {}
+			const {
+				scope,
+				fileContent,
+				packType = 'behaviorPack',
+			} = detect ?? {}
 			if (!scope || !fileContent) continue
 
 			if (!hasAnyPath(json, fileContent)) continue
 
-			return getStartPath(scope)
+			return getStartPath(
+				scope,
+				Array.isArray(packType) ? packType[0] : packType
+			)
 		}
 
 		return null
