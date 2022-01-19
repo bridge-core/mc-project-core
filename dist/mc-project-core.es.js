@@ -165,19 +165,21 @@ class FileType {
     return ids;
   }
   async guessFolder(fileHandle) {
-    var _a;
-    const getStartPath = (scope) => {
+    var _a, _b;
+    const getStartPath = (scope, packId) => {
+      var _a2, _b2;
       let startPath = Array.isArray(scope) ? scope[0] : scope;
       if (!startPath.endsWith("/"))
         startPath += "/";
-      return startPath;
+      const packPath = (_b2 = (_a2 = this.projectConfig) == null ? void 0 : _a2.getPackRoot(packId)) != null ? _b2 : "./unknown";
+      return join(packPath, startPath);
     };
     const extension = `.${fileHandle.name.split(".").pop()}`;
     for (const { detect = {} } of this.all) {
       if (!detect.scope)
         continue;
       if ((_a = detect.fileExtensions) == null ? void 0 : _a.includes(extension))
-        return getStartPath(detect.scope);
+        return getStartPath(detect.scope, Array.isArray(detect.packType) ? detect.packType[0] : (_b = detect.packType) != null ? _b : "behaviorPack");
     }
     if (!fileHandle.name.endsWith(".json"))
       return null;
@@ -191,12 +193,16 @@ class FileType {
     for (const { type, detect } of this.all) {
       if (typeof type === "string" && type !== "json")
         continue;
-      const { scope, fileContent } = detect != null ? detect : {};
+      const {
+        scope,
+        fileContent,
+        packType = "behaviorPack"
+      } = detect != null ? detect : {};
       if (!scope || !fileContent)
         continue;
       if (!hasAnyPath(json, fileContent))
         continue;
-      return getStartPath(scope);
+      return getStartPath(scope, Array.isArray(packType) ? packType[0] : packType);
     }
     return null;
   }
