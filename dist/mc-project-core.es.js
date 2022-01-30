@@ -129,7 +129,7 @@ class FileType {
       const scope = Array.isArray((_g = fileType.detect) == null ? void 0 : _g.scope) ? (_h = fileType.detect) == null ? void 0 : _h.scope : [(_i = fileType.detect) == null ? void 0 : _i.scope];
       const hasMatcher = !!((_j = fileType.detect) == null ? void 0 : _j.matcher);
       const matcher = Array.isArray((_k = fileType.detect) == null ? void 0 : _k.matcher) ? (_l = fileType.detect) == null ? void 0 : _l.matcher : [(_m = fileType.detect) == null ? void 0 : _m.matcher];
-      if (fileExtensions && extension && !fileExtensions.includes(extension))
+      if (fileExtensions && extension && !fileExtensions.includes(extension) || !extension)
         continue;
       if (hasScope) {
         if (this.prefixMatchers(packTypes, scope).some((scope2) => filePath.startsWith(scope2)))

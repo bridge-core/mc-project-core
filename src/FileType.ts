@@ -132,9 +132,10 @@ export abstract class FileType<TSetupArg> {
 				: [fileType.detect?.matcher!]
 
 			if (
-				fileExtensions &&
-				extension &&
-				!fileExtensions.includes(extension)
+				(fileExtensions &&
+					extension &&
+					!fileExtensions.includes(extension)) ||
+				!extension
 			)
 				continue
 
