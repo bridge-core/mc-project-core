@@ -108,6 +108,7 @@ export abstract class FileType<TSetupArg> {
 	 */
 	get(filePath?: string, searchFileType?: string) {
 		const extension = filePath ? extname(filePath) : null
+		if (!extension) return
 
 		for (const fileType of this.all) {
 			if (searchFileType !== undefined && searchFileType === fileType.id)
@@ -132,10 +133,8 @@ export abstract class FileType<TSetupArg> {
 				: [fileType.detect?.matcher!]
 
 			if (
-				(fileExtensions &&
-					extension &&
-					!fileExtensions.includes(extension)) ||
-				!extension
+				fileExtensions &&
+				!fileExtensions.includes(extension)
 			)
 				continue
 
