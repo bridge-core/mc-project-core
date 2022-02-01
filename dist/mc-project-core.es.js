@@ -118,6 +118,8 @@ class FileType {
   get(filePath, searchFileType) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
     const extension = filePath ? extname(filePath) : null;
+    if (!extension)
+      return;
     for (const fileType of this.all) {
       if (searchFileType !== void 0 && searchFileType === fileType.id)
         return fileType;
@@ -129,7 +131,7 @@ class FileType {
       const scope = Array.isArray((_g = fileType.detect) == null ? void 0 : _g.scope) ? (_h = fileType.detect) == null ? void 0 : _h.scope : [(_i = fileType.detect) == null ? void 0 : _i.scope];
       const hasMatcher = !!((_j = fileType.detect) == null ? void 0 : _j.matcher);
       const matcher = Array.isArray((_k = fileType.detect) == null ? void 0 : _k.matcher) ? (_l = fileType.detect) == null ? void 0 : _l.matcher : [(_m = fileType.detect) == null ? void 0 : _m.matcher];
-      if (fileExtensions && extension && !fileExtensions.includes(extension))
+      if (fileExtensions && !fileExtensions.includes(extension))
         continue;
       if (hasScope) {
         if (this.prefixMatchers(packTypes, scope).some((scope2) => filePath.startsWith(scope2)))
