@@ -11,6 +11,7 @@ export interface IConfigJson {
     packs: {
         [packId in TPackTypeId]?: string;
     };
+    worlds: string[];
     packDefinitions: {
         families: IPackDefinition;
         tags: IPackDefinition;
