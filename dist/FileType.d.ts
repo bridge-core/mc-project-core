@@ -34,6 +34,7 @@ export interface IFileType {
         variables?: string[];
         definitions?: string[];
     };
+    formatVersionMap?: Record<string, string>;
 }
 export interface IDefinitions {
     [key: string]: IDefinition | IDefinition[];
