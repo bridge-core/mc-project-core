@@ -25,7 +25,7 @@ export interface IConfigJson {
 	 *
 	 * @example ["solvedDev", "Joel ant 05"]
 	 */
-	authors: string[]
+	authors: (string | AuthorData)[]
 
 	/**
 	 * The Minecraft version this project targets
@@ -104,6 +104,22 @@ export interface IConfigJson {
 	compiler?: {
 		plugins: (string | [string, any])[]
 	}
+}
+
+interface AuthorData {
+	/**
+	 * Name of the author
+	 *
+	 * @example "solvedDev"
+	 */
+	name: string
+	/**
+	 * Path to an image (relative to the project root) that serves as an icon for this author.
+	 * Tools should support ".png" & ".jpg" images
+	 *
+	 * @example "./meta/icons/solvedDev.png"
+	 */
+	logo?: string
 }
 
 interface IPackDefinition {
