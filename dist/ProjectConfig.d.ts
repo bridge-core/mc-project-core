@@ -3,7 +3,7 @@ export interface IConfigJson {
     type: 'minecraftBedrock' | 'minecraftJava';
     name: string;
     author: string;
-    authors: string[];
+    authors: (string | AuthorData)[];
     targetVersion: string;
     experimentalGameplay?: Record<string, boolean>;
     capabilities: string[];
@@ -27,6 +27,10 @@ export interface IConfigJson {
     compiler?: {
         plugins: (string | [string, any])[];
     };
+}
+interface AuthorData {
+    name: string;
+    logo?: string;
 }
 interface IPackDefinition {
     type?: string;
