@@ -21,9 +21,12 @@ class ProjectConfig {
   get() {
     return this.data;
   }
-  getPackRoot(packId) {
+  getRelativePackRoot(packId) {
     var _a, _b;
     return (_b = (_a = this.data.packs) == null ? void 0 : _a[packId]) != null ? _b : defaultPackPaths[packId];
+  }
+  getAbsolutePackRoot(packId) {
+    return this.resolvePackPath(packId);
   }
   resolvePackPath(packId, filePath) {
     if (!filePath && !packId)
@@ -31,8 +34,8 @@ class ProjectConfig {
     else if (!packId && filePath)
       return join(this.basePath, filePath);
     else if (!filePath && packId)
-      return resolve(this.basePath, this.getPackRoot(packId));
-    return resolve(this.basePath, `${this.getPackRoot(packId)}/${filePath}`);
+      return resolve(this.basePath, this.getRelativePackRoot(packId));
+    return resolve(this.basePath, `${this.getRelativePackRoot(packId)}/${filePath}`);
   }
   getAvailablePackPaths() {
     var _a;
@@ -173,7 +176,7 @@ class FileType {
       let startPath = Array.isArray(scope) ? scope[0] : scope;
       if (!startPath.endsWith("/"))
         startPath += "/";
-      const packPath = (_b2 = (_a2 = this.projectConfig) == null ? void 0 : _a2.getPackRoot(packId)) != null ? _b2 : "./unknown";
+      const packPath = (_b2 = (_a2 = this.projectConfig) == null ? void 0 : _a2.getAbsolutePackRoot(packId)) != null ? _b2 : "./unknown";
       return join(packPath, startPath);
     };
     const extension = `.${fileHandle.name.split(".").pop()}`;

@@ -133,11 +133,7 @@ export abstract class FileType<TSetupArg> {
 				? fileType.detect?.matcher
 				: [fileType.detect?.matcher!]
 
-			if (
-				fileExtensions &&
-				!fileExtensions.includes(extension)
-			)
-				continue
+			if (fileExtensions && !fileExtensions.includes(extension)) continue
 
 			if (hasScope) {
 				if (
@@ -210,7 +206,7 @@ export abstract class FileType<TSetupArg> {
 			if (!startPath.endsWith('/')) startPath += '/'
 
 			const packPath =
-				this.projectConfig?.getPackRoot(packId) ?? './unknown'
+				this.projectConfig?.getAbsolutePackRoot(packId) ?? './unknown'
 
 			return join(packPath, startPath)
 		}

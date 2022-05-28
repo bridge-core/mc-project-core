@@ -170,18 +170,31 @@ export abstract class ProjectConfig {
 	/**
 	 * TODO: These functions should be a part of PackType.ts. They don't really make sense here
 	 */
-	getPackRoot(packId: TPackTypeId) {
+	/**
+	 * Get the relative path to the specified pack
+	 * @param packId
+	 * @returns Path relative to the project config file
+	 */
+	getRelativePackRoot(packId: TPackTypeId) {
 		return this.data.packs?.[packId] ?? defaultPackPaths[packId]
+	}
+	/**
+	 * Get the absolute path to the specified pack
+	 * @param packId
+	 * @returns Path relative to the bridge folder
+	 */
+	getAbsolutePackRoot(packId: TPackTypeId) {
+		return this.resolvePackPath(packId)
 	}
 	resolvePackPath(packId?: TPackTypeId, filePath?: string) {
 		if (!filePath && !packId) return this.basePath
 		else if (!packId && filePath) return join(this.basePath, filePath)
 		else if (!filePath && packId)
-			return resolve(this.basePath, this.getPackRoot(packId))
+			return resolve(this.basePath, this.getRelativePackRoot(packId))
 
 		return resolve(
 			this.basePath,
-			`${this.getPackRoot(packId!)}/${filePath}`
+			`${this.getRelativePackRoot(packId!)}/${filePath}`
 		)
 	}
 	getAvailablePackPaths() {

@@ -52,7 +52,8 @@ export declare abstract class ProjectConfig {
     refreshConfig(): Promise<void>;
     setup(): Promise<void>;
     get(): Partial<IConfigJson>;
-    getPackRoot(packId: TPackTypeId): string;
+    getRelativePackRoot(packId: TPackTypeId): string;
+    getAbsolutePackRoot(packId: TPackTypeId): string;
     resolvePackPath(packId?: TPackTypeId, filePath?: string): string;
     getAvailablePackPaths(): string[];
     getAvailablePacks(): Record<string, string>;
