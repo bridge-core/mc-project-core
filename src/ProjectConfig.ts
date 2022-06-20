@@ -96,9 +96,12 @@ export interface IConfigJson {
 	[uniqueToolId: string]: any
 
 	bridge?: {
+		formatVersion?: number
 		lightTheme?: string
 		darkTheme?: string
 		v1CompatMode?: boolean
+
+		[k: string]: unknown
 	}
 
 	compiler?: {
