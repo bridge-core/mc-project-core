@@ -89,6 +89,12 @@ export interface IConfigJson {
 	}
 
 	/**
+	 * States whether the project is developed for use on Bedrock Dedicated Server software
+	 * Certain GameTest modules are dedicated server only (e.g. 'mojang-minecraft-server-admin')
+	 */
+	bdsProject: boolean
+
+	/**
 	 * Tools can create their own namespace inside of this file to save tool specific data and settings
 	 *
 	 * @example { "bridge": { "darkTheme": "bridge.default.dark", "lightTheme": "bridge.default.light" } }
