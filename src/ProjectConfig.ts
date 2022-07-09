@@ -1,5 +1,5 @@
 import type { TPackTypeId } from './PackType'
-import { resolve, join } from 'path-browserify'
+import { join } from 'path-browserify'
 
 export interface IConfigJson {
 	/**
@@ -199,9 +199,9 @@ export abstract class ProjectConfig {
 		if (!filePath && !packId) return this.basePath
 		else if (!packId && filePath) return join(this.basePath, filePath)
 		else if (!filePath && packId)
-			return resolve(this.basePath, this.getRelativePackRoot(packId))
+			return join(this.basePath, this.getRelativePackRoot(packId))
 
-		return resolve(
+		return join(
 			this.basePath,
 			`${this.getRelativePackRoot(packId!)}/${filePath}`
 		)
