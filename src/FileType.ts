@@ -22,15 +22,18 @@ export interface IFileType {
 	}
 
 	schema: string
-	types: (string | {
-		definition: string
-		requires: {
-			targetVersion?: [TCompareOperator, string]
-			dependencies?: string[]
-			experimentalGameplay?: string[]
-			packType?: TPackTypeId[]
-		}
-	})[]
+	types: (
+		| string
+		| {
+				definition: string
+				requires: {
+					targetVersion?: [TCompareOperator, string]
+					dependencies?: string[]
+					experimentalGameplay?: string[]
+					packType?: TPackTypeId[]
+				}
+		  }
+	)[]
 	packSpider: string
 	lightningCache: string
 	definitions: IDefinitions
@@ -163,10 +166,7 @@ export abstract class FileType<TSetupArg> {
 				)
 
 				if (
-					this.isMatch(
-						filePath,
-						this.prefixMatchers(packTypes, mustMatchAny)
-					) &&
+					this.isMatch(filePath, mustMatchAny) &&
 					!this.isMatch(filePath, mustNotMatch)
 				) {
 					return fileType

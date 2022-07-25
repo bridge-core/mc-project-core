@@ -142,7 +142,7 @@ class FileType {
       } else if (hasMatcher) {
         const mustMatchAny = this.prefixMatchers(packTypes, matcher.filter((m) => !m.startsWith("!")));
         const mustNotMatch = this.prefixMatchers(packTypes, matcher.filter((m) => m.startsWith("!")).map((m) => m.slice(1)));
-        if (this.isMatch(filePath, this.prefixMatchers(packTypes, mustMatchAny)) && !this.isMatch(filePath, mustNotMatch)) {
+        if (this.isMatch(filePath, mustMatchAny) && !this.isMatch(filePath, mustNotMatch)) {
           return fileType;
         }
       } else {
