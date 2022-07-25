@@ -130,7 +130,7 @@ export abstract class FileType<TSetupArg> {
 				: [fileType.detect?.scope!]
 			const hasMatcher = !!fileType.detect?.matcher
 			const matcher = Array.isArray(fileType.detect?.matcher)
-				? fileType.detect?.matcher
+				? fileType.detect?.matcher!
 				: [fileType.detect?.matcher!]
 
 			if (fileExtensions && !fileExtensions.includes(extension)) continue
@@ -143,11 +143,23 @@ export abstract class FileType<TSetupArg> {
 				)
 					return fileType
 			} else if (hasMatcher) {
+				const mustMatchAny = this.prefixMatchers(
+					packTypes,
+					matcher.filter((m) => !m.startsWith('!'))
+				)
+				const mustNotMatch = this.prefixMatchers(
+					packTypes,
+					matcher
+						.filter((m) => m.startsWith('!'))
+						.map((m) => m.slice(1))
+				)
+
 				if (
 					this.isMatch(
 						filePath,
-						this.prefixMatchers(packTypes, matcher!)
-					)
+						this.prefixMatchers(packTypes, mustMatchAny)
+					) &&
+					!this.isMatch(filePath, mustNotMatch)
 				) {
 					return fileType
 				}
