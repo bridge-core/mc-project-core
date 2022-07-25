@@ -140,7 +140,9 @@ class FileType {
         if (this.prefixMatchers(packTypes, scope).some((scope2) => filePath.startsWith(scope2)))
           return fileType;
       } else if (hasMatcher) {
-        if (this.isMatch(filePath, this.prefixMatchers(packTypes, matcher))) {
+        const mustMatchAny = this.prefixMatchers(packTypes, matcher.filter((m) => !m.startsWith("!")));
+        const mustNotMatch = this.prefixMatchers(packTypes, matcher.filter((m) => m.startsWith("!")).map((m) => m.slice(1)));
+        if (this.isMatch(filePath, this.prefixMatchers(packTypes, mustMatchAny)) && !this.isMatch(filePath, mustNotMatch)) {
           return fileType;
         }
       } else {
