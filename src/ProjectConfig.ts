@@ -1,5 +1,5 @@
 import type { TPackTypeId } from './PackType'
-import { resolve, join } from 'path-browserify'
+import { join } from 'path-browserify'
 
 export interface IConfigJson {
 	/**
@@ -87,6 +87,12 @@ export interface IConfigJson {
 		scoreboardObjectives: IPackDefinition
 		names: IPackDefinition
 	}
+
+	/**
+	 * States whether the project is developed for use on Bedrock Dedicated Server software
+	 * Certain GameTest modules are dedicated server only (e.g. 'mojang-minecraft-server-admin')
+	 */
+	bdsProject: boolean
 
 	/**
 	 * Tools can create their own namespace inside of this file to save tool specific data and settings
@@ -193,9 +199,9 @@ export abstract class ProjectConfig {
 		if (!filePath && !packId) return this.basePath
 		else if (!packId && filePath) return join(this.basePath, filePath)
 		else if (!filePath && packId)
-			return resolve(this.basePath, this.getRelativePackRoot(packId))
+			return join(this.basePath, this.getRelativePackRoot(packId))
 
-		return resolve(
+		return join(
 			this.basePath,
 			`${this.getRelativePackRoot(packId!)}/${filePath}`
 		)

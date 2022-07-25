@@ -13,9 +13,15 @@ export interface IFileType {
         fileExtensions?: string[];
     };
     schema: string;
-    types: (string | [string, {
-        targetVersion: [TCompareOperator, string];
-    }])[];
+    types: (string | {
+        definition: string;
+        requires: {
+            targetVersion?: [TCompareOperator, string];
+            dependencies?: string[];
+            experimentalGameplay?: string[];
+            packType?: TPackTypeId[];
+        };
+    })[];
     packSpider: string;
     lightningCache: string;
     definitions: IDefinitions;

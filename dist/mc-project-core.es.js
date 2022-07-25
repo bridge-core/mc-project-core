@@ -1,4 +1,4 @@
-import { join, resolve, extname } from "path-browserify";
+import { join, extname } from "path-browserify";
 import json5 from "json5";
 import { hasAnyPath } from "bridge-common-utils";
 const defaultPackPaths = {
@@ -34,8 +34,8 @@ class ProjectConfig {
     else if (!packId && filePath)
       return join(this.basePath, filePath);
     else if (!filePath && packId)
-      return resolve(this.basePath, this.getRelativePackRoot(packId));
-    return resolve(this.basePath, `${this.getRelativePackRoot(packId)}/${filePath}`);
+      return join(this.basePath, this.getRelativePackRoot(packId));
+    return join(this.basePath, `${this.getRelativePackRoot(packId)}/${filePath}`);
   }
   getAvailablePackPaths() {
     var _a;

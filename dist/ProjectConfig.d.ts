@@ -18,6 +18,7 @@ export interface IConfigJson {
         scoreboardObjectives: IPackDefinition;
         names: IPackDefinition;
     };
+    bdsProject: boolean;
     [uniqueToolId: string]: any;
     bridge?: {
         formatVersion?: number;
