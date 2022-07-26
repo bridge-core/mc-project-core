@@ -5,7 +5,7 @@ import { defaultPackPaths, ProjectConfig } from './ProjectConfig'
  */
 export interface IPackType {
 	id: TPackTypeId
-	matcher: string | string[]
+	defaultPackPath: string
 	color: string
 	icon: string
 }
