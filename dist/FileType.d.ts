@@ -69,7 +69,7 @@ export declare abstract class FileType<TSetupArg> {
     };
     getPluginFileTypes(): IFileType[];
     setPluginFileTypes(fileDefs?: IFileType[]): void;
-    get(filePath?: string, searchFileType?: string): IFileType | undefined;
+    get(filePath?: string, searchFileType?: string, checkFileExtension?: boolean): IFileType | undefined;
     protected prefixMatchers(packTypes: TPackTypeId[], matchers: string[]): string[];
     getIds(): string[];
     guessFolder(fileHandle: {

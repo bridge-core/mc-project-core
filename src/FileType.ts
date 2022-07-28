@@ -117,8 +117,10 @@ export abstract class FileType<TSetupArg> {
 	/**
 	 * Get the file definition data for the given file path
 	 * @param filePath file path to fetch file definition for
+	 * @param searchFileType If set, search for this specific file type
+	 * @param checkFileExtension True by default; if false, will not check the file extension
 	 */
-	get(filePath?: string, searchFileType?: string) {
+	get(filePath?: string, searchFileType?: string, checkFileExtension = true) {
 		const extension = filePath ? extname(filePath) : null
 		if (!extension) return
 
@@ -144,7 +146,12 @@ export abstract class FileType<TSetupArg> {
 				? fileType.detect?.matcher!
 				: [fileType.detect?.matcher!]
 
-			if (fileExtensions && !fileExtensions.includes(extension)) continue
+			if (
+				checkFileExtension &&
+				fileExtensions &&
+				!fileExtensions.includes(extension)
+			)
+				continue
 
 			if (hasScope) {
 				if (
