@@ -238,20 +238,30 @@ export abstract class FileType<TSetupArg> {
 			return join(packPath, startPath)
 		}
 
-		// 1. Guess based on file extension
 		const extension = `.${fileHandle.name.split('.').pop()!}`
-		for (const { detect = {} } of this.all) {
-			if (!detect.scope) continue
-			if (detect.fileExtensions?.includes(extension))
-				return getStartPath(
-					detect.scope,
-					Array.isArray(detect.packType)
-						? detect.packType[0]
-						: detect.packType ?? 'behaviorPack'
-				)
+		// 1. Guess based on file extension
+		const validTypes = this.all.filter(({ detect }) => {
+			if (!detect || !detect.scope) return false
+
+			return detect.fileExtensions?.includes(extension)
+		})
+
+		const onlyOneExtensionMatch = validTypes.length === 1
+		const notAJsonFileButMatch =
+			extension !== '.json' && validTypes.length > 0
+
+		if (onlyOneExtensionMatch || notAJsonFileButMatch) {
+			const { detect } = validTypes[0]
+
+			return getStartPath(
+				detect!.scope!,
+				Array.isArray(detect!.packType)
+					? detect!.packType[0]
+					: detect!.packType ?? 'behaviorPack'
+			)
 		}
 
-		if (!fileHandle.name.endsWith('.json')) return null
+		if (!notAJsonFileButMatch) return null
 
 		// 2. Guess based on json file content
 		const file = await fileHandle.getFile()
@@ -262,7 +272,7 @@ export abstract class FileType<TSetupArg> {
 			return null
 		}
 
-		for (const { type, detect } of this.all) {
+		for (const { type, detect } of validTypes) {
 			if (typeof type === 'string' && type !== 'json') continue
 
 			const {

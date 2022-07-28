@@ -1,6 +1,6 @@
 {
 	"name": "mc-project-core",
-	"version": "0.3.18",
+	"version": "0.3.19",
 	"author": "solvedDev",
 	"description": "A library with common utility functions connected to loading a Bedrock project. Used by both bridge. and dash-compiler.",
 	"scripts": {

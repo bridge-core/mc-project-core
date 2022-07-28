@@ -172,23 +172,29 @@ class FileType {
     return ids;
   }
   async guessFolder(fileHandle) {
-    var _a, _b;
+    var _a;
     const getStartPath = (scope, packId) => {
-      var _a2, _b2;
+      var _a2, _b;
       let startPath = Array.isArray(scope) ? scope[0] : scope;
       if (!startPath.endsWith("/"))
         startPath += "/";
-      const packPath = (_b2 = (_a2 = this.projectConfig) == null ? void 0 : _a2.getAbsolutePackRoot(packId)) != null ? _b2 : "./unknown";
+      const packPath = (_b = (_a2 = this.projectConfig) == null ? void 0 : _a2.getAbsolutePackRoot(packId)) != null ? _b : "./unknown";
       return join(packPath, startPath);
     };
     const extension = `.${fileHandle.name.split(".").pop()}`;
-    for (const { detect = {} } of this.all) {
-      if (!detect.scope)
-        continue;
-      if ((_a = detect.fileExtensions) == null ? void 0 : _a.includes(extension))
-        return getStartPath(detect.scope, Array.isArray(detect.packType) ? detect.packType[0] : (_b = detect.packType) != null ? _b : "behaviorPack");
+    const validTypes = this.all.filter(({ detect }) => {
+      var _a2;
+      if (!detect || !detect.scope)
+        return false;
+      return (_a2 = detect.fileExtensions) == null ? void 0 : _a2.includes(extension);
+    });
+    const onlyOneExtensionMatch = validTypes.length === 1;
+    const notAJsonFileButMatch = extension !== ".json" && validTypes.length > 0;
+    if (onlyOneExtensionMatch || notAJsonFileButMatch) {
+      const { detect } = validTypes[0];
+      return getStartPath(detect.scope, Array.isArray(detect.packType) ? detect.packType[0] : (_a = detect.packType) != null ? _a : "behaviorPack");
     }
-    if (!fileHandle.name.endsWith(".json"))
+    if (!notAJsonFileButMatch)
       return null;
     const file = await fileHandle.getFile();
     let json;
@@ -197,7 +203,7 @@ class FileType {
     } catch {
       return null;
     }
-    for (const { type, detect } of this.all) {
+    for (const { type, detect } of validTypes) {
       if (typeof type === "string" && type !== "json")
         continue;
       const {
