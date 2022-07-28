@@ -97,7 +97,23 @@ class FileType {
     this.projectConfig = projectConfig;
     this.isMatch = isMatch;
     this.pluginFileTypes = new Set();
-    this.fileTypes = [];
+    this._fileTypes = [];
+  }
+  get fileTypes() {
+    return this._fileTypes;
+  }
+  set fileTypes(fileTypes) {
+    this._fileTypes = fileTypes.sort((a, b) => {
+      if (a.add === "post" && b.add !== "post")
+        return 1;
+      if (a.add !== "post" && b.add === "post")
+        return -1;
+      if (a.add === "pre" && b.add !== "pre")
+        return -1;
+      if (a.add !== "pre" && b.add === "pre")
+        return 1;
+      return 0;
+    });
   }
   get all() {
     return this.fileTypes.concat([...this.pluginFileTypes.values()]);

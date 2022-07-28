@@ -11,6 +11,11 @@ type TCompareOperator = '>' | '>=' | '=' | '<' | '<='
  */
 export interface IFileType {
 	type?: 'json' | 'text' | 'nbt'
+	/**
+	 * Where to add the file definition in relation to the other file definitions
+	 */
+	add?: 'pre' | 'post'
+
 	id: string
 	icon?: string
 	detect?: {
@@ -77,7 +82,22 @@ export interface IMonacoSchemaArrayEntry {
  */
 export abstract class FileType<TSetupArg> {
 	protected pluginFileTypes = new Set<IFileType>()
-	protected fileTypes: IFileType[] = []
+	protected _fileTypes: IFileType[] = []
+
+	get fileTypes() {
+		return this._fileTypes
+	}
+	set fileTypes(fileTypes: IFileType[]) {
+		// Sort file types based on add property: 'post'/'pre'/undefined
+		this._fileTypes = fileTypes.sort((a, b) => {
+			if (a.add === 'post' && b.add !== 'post') return 1
+			if (a.add !== 'post' && b.add === 'post') return -1
+
+			if (a.add === 'pre' && b.add !== 'pre') return -1
+			if (a.add !== 'pre' && b.add === 'pre') return 1
+			return 0
+		})
+	}
 
 	/**
 	 *

@@ -3,6 +3,7 @@ import type { TPackTypeId } from './PackType';
 declare type TCompareOperator = '>' | '>=' | '=' | '<' | '<=';
 export interface IFileType {
     type?: 'json' | 'text' | 'nbt';
+    add?: 'pre' | 'post';
     id: string;
     icon?: string;
     detect?: {
@@ -59,7 +60,9 @@ export declare abstract class FileType<TSetupArg> {
     protected projectConfig: ProjectConfig | undefined;
     protected isMatch: (str: string, pattern: string | string[]) => boolean;
     protected pluginFileTypes: Set<IFileType>;
-    protected fileTypes: IFileType[];
+    protected _fileTypes: IFileType[];
+    get fileTypes(): IFileType[];
+    set fileTypes(fileTypes: IFileType[]);
     constructor(projectConfig: ProjectConfig | undefined, isMatch: (str: string, pattern: string | string[]) => boolean);
     get all(): IFileType[];
     setProjectConfig(projectConfig: ProjectConfig): void;
