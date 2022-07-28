@@ -194,7 +194,7 @@ class FileType {
       const { detect } = validTypes[0];
       return getStartPath(detect.scope, Array.isArray(detect.packType) ? detect.packType[0] : (_a = detect.packType) != null ? _a : "behaviorPack");
     }
-    if (!notAJsonFileButMatch)
+    if (extension !== ".json")
       return null;
     const file = await fileHandle.getFile();
     let json;

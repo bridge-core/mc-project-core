@@ -261,7 +261,7 @@ export abstract class FileType<TSetupArg> {
 			)
 		}
 
-		if (!notAJsonFileButMatch) return null
+		if (extension !== '.json') return null
 
 		// 2. Guess based on json file content
 		const file = await fileHandle.getFile()
