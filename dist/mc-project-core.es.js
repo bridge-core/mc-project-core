@@ -72,9 +72,17 @@ class PackType {
   getFromId(packId) {
     return this.all.find((packType) => packType.id === packId);
   }
-  get(filePath) {
-    var _a, _b;
-    const packTypes = (_b = (_a = this.projectConfig) == null ? void 0 : _a.getAvailablePacks()) != null ? _b : defaultPackPaths;
+  get(filePath, tryAllPacks = false) {
+    var _a;
+    let packTypes = (_a = this.projectConfig) == null ? void 0 : _a.getAvailablePacks();
+    if (!packTypes || tryAllPacks)
+      packTypes = Object.fromEntries(Object.keys(defaultPackPaths).map((packId) => {
+        var _a2;
+        const packPath = (_a2 = this.projectConfig) == null ? void 0 : _a2.resolvePackPath(packId);
+        if (!packPath)
+          return null;
+        return [packId, packPath];
+      }).filter((pack) => pack !== null));
     for (const packId in packTypes) {
       if (filePath.startsWith(packTypes[packId])) {
         return this.getFromId(packId);

@@ -15,7 +15,7 @@ export declare abstract class PackType<TSetupArg> {
     abstract setup(arg: TSetupArg): Promise<void>;
     get all(): IPackType[];
     getFromId(packId: TPackTypeId): IPackType | undefined;
-    get(filePath: string): IPackType | undefined;
+    get(filePath: string, tryAllPacks?: boolean): IPackType | undefined;
     getId(filePath: string): "unknown" | TPackTypeId;
     addExtensionPackType(packType: IPackType): {
         dispose: () => boolean;
