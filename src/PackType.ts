@@ -37,11 +37,22 @@ export abstract class PackType<TSetupArg> {
 	getFromId(packId: TPackTypeId) {
 		return this.all.find((packType) => packType.id === packId)
 	}
-	get(filePath: string) {
-		const packTypes =
-			this.projectConfig?.getAvailablePacks() ?? defaultPackPaths
+	get(filePath: string, tryAllPacks = false) {
+		// Load packs defined within the project config
+		let packTypes = this.projectConfig?.getAvailablePacks()
+
+		// Load all available pack types if necessary
+		if (!packTypes || tryAllPacks)
+			packTypes = Object.fromEntries(
+				Object.keys(defaultPackPaths).map((packId) => [
+					packId,
+					this.projectConfig?.resolvePackPath(<TPackTypeId>packId),
+				])
+			)
 
 		for (const packId in packTypes) {
+			if(packTypes[packId] === undefined) continue
+
 			if (filePath.startsWith(packTypes[packId])) {
 				return this.getFromId(packId as TPackTypeId)
 			}
