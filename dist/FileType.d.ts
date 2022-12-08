@@ -15,6 +15,7 @@ export interface IFileType {
     };
     schema: string;
     types: (string | {
+        moduleName?: string;
         definition: string;
         requires: {
             targetVersion?: [TCompareOperator, string];

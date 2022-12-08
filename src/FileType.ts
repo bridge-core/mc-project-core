@@ -30,6 +30,7 @@ export interface IFileType {
 	types: (
 		| string
 		| {
+				moduleName?: string
 				definition: string
 				requires: {
 					targetVersion?: [TCompareOperator, string]
