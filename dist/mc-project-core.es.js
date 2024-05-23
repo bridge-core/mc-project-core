@@ -1,6 +1,6 @@
 import { join, extname } from "path-browserify";
 import json5 from "json5";
-import { hasAnyPath } from "bridge-common-utils";
+import { hasAnyPath } from "@bridge-editor/common-utils";
 const defaultPackPaths = {
   behaviorPack: "./BP",
   resourcePack: "./RP",
