@@ -1,6 +1,6 @@
 import type { ProjectConfig } from './ProjectConfig';
 import type { TPackTypeId } from './PackType';
-declare type TCompareOperator = '>' | '>=' | '=' | '<' | '<=';
+type TCompareOperator = '>' | '>=' | '=' | '<' | '<=';
 export interface IFileType {
     type?: 'json' | 'text' | 'nbt';
     add?: 'pre' | 'post';

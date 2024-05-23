@@ -1,6 +1,6 @@
 import { join, extname } from "path-browserify";
 import json5 from "json5";
-import { hasAnyPath } from "bridge-common-utils";
+import { hasAnyPath } from "@bridge-editor/common-utils";
 const defaultPackPaths = {
   behaviorPack: "./BP",
   resourcePack: "./RP",
@@ -35,7 +35,10 @@ class ProjectConfig {
       return join(this.basePath, filePath);
     else if (!filePath && packId)
       return join(this.basePath, this.getRelativePackRoot(packId));
-    return join(this.basePath, `${this.getRelativePackRoot(packId)}/${filePath}`);
+    return join(
+      this.basePath,
+      `${this.getRelativePackRoot(packId)}/${filePath}`
+    );
   }
   getAvailablePackPaths() {
     var _a;
@@ -61,13 +64,15 @@ class PackType {
   constructor(projectConfig) {
     this.projectConfig = projectConfig;
     this.packTypes = [];
-    this.extensionPackTypes = new Set();
+    this.extensionPackTypes = /* @__PURE__ */ new Set();
   }
   setProjectConfig(projectConfig) {
     this.projectConfig = projectConfig;
   }
   get all() {
-    return this.packTypes.concat(...Array.from(this.extensionPackTypes.values()));
+    return this.packTypes.concat(
+      ...Array.from(this.extensionPackTypes.values())
+    );
   }
   getFromId(packId) {
     return this.all.find((packType) => packType.id === packId);
@@ -76,13 +81,17 @@ class PackType {
     var _a;
     let packTypes = (_a = this.projectConfig) == null ? void 0 : _a.getAvailablePacks();
     if (!packTypes || tryAllPacks)
-      packTypes = Object.fromEntries(Object.keys(defaultPackPaths).map((packId) => {
-        var _a2;
-        const packPath = (_a2 = this.projectConfig) == null ? void 0 : _a2.resolvePackPath(packId);
-        if (!packPath)
-          return null;
-        return [packId, packPath];
-      }).filter((pack) => pack !== null));
+      packTypes = Object.fromEntries(
+        Object.keys(defaultPackPaths).map((packId) => {
+          var _a2;
+          const packPath = (_a2 = this.projectConfig) == null ? void 0 : _a2.resolvePackPath(
+            packId
+          );
+          if (!packPath)
+            return null;
+          return [packId, packPath];
+        }).filter((pack) => pack !== null)
+      );
     for (const packId in packTypes) {
       if (filePath.startsWith(packTypes[packId])) {
         return this.getFromId(packId);
@@ -104,7 +113,7 @@ class FileType {
   constructor(projectConfig, isMatch) {
     this.projectConfig = projectConfig;
     this.isMatch = isMatch;
-    this.pluginFileTypes = new Set();
+    this.pluginFileTypes = /* @__PURE__ */ new Set();
     this._fileTypes = [];
   }
   get fileTypes() {
@@ -161,17 +170,27 @@ class FileType {
       if (checkFileExtension && fileExtensions && !fileExtensions.includes(extension))
         continue;
       if (hasScope) {
-        if (this.prefixMatchers(packTypes, scope).some((scope2) => filePath.startsWith(scope2)))
+        if (this.prefixMatchers(packTypes, scope).some(
+          (scope2) => filePath.startsWith(scope2)
+        ))
           return fileType;
       } else if (hasMatcher) {
-        const mustMatchAny = this.prefixMatchers(packTypes, matcher.filter((m) => !m.startsWith("!")));
-        const mustNotMatch = this.prefixMatchers(packTypes, matcher.filter((m) => m.startsWith("!")).map((m) => m.slice(1)));
+        const mustMatchAny = this.prefixMatchers(
+          packTypes,
+          matcher.filter((m) => !m.startsWith("!"))
+        );
+        const mustNotMatch = this.prefixMatchers(
+          packTypes,
+          matcher.filter((m) => m.startsWith("!")).map((m) => m.slice(1))
+        );
         if (this.isMatch(filePath, mustMatchAny) && !this.isMatch(filePath, mustNotMatch)) {
           return fileType;
         }
       } else {
         console.log(fileType);
-        throw new Error(`Invalid file definition, no "detect" properties`);
+        throw new Error(
+          `Invalid file definition, no "detect" properties`
+        );
       }
     }
   }
@@ -179,11 +198,15 @@ class FileType {
     if (!this.projectConfig)
       return [];
     if (packTypes.length === 0)
-      return matchers.map((matcher) => this.projectConfig.resolvePackPath(void 0, matcher));
+      return matchers.map(
+        (matcher) => this.projectConfig.resolvePackPath(void 0, matcher)
+      );
     const prefixed = [];
     for (const packType of packTypes) {
       for (const matcher of matchers) {
-        prefixed.push(this.projectConfig.resolvePackPath(packType, matcher));
+        prefixed.push(
+          this.projectConfig.resolvePackPath(packType, matcher)
+        );
       }
     }
     return prefixed;
@@ -216,7 +239,10 @@ class FileType {
     const notAJsonFileButMatch = extension !== ".json" && validTypes.length > 0;
     if (onlyOneExtensionMatch || notAJsonFileButMatch) {
       const { detect } = validTypes[0];
-      return getStartPath(detect.scope, Array.isArray(detect.packType) ? detect.packType[0] : (_a = detect.packType) != null ? _a : "behaviorPack");
+      return getStartPath(
+        detect.scope,
+        Array.isArray(detect.packType) ? detect.packType[0] : (_a = detect.packType) != null ? _a : "behaviorPack"
+      );
     }
     if (extension !== ".json")
       return null;
@@ -239,7 +265,10 @@ class FileType {
         continue;
       if (!hasAnyPath(json, fileContent))
         continue;
-      return getStartPath(scope, Array.isArray(packType) ? packType[0] : packType);
+      return getStartPath(
+        scope,
+        Array.isArray(packType) ? packType[0] : packType
+      );
     }
     return null;
   }

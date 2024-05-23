@@ -5,7 +5,7 @@ export interface IPackType {
     color: string;
     icon: string;
 }
-export declare type TPackTypeId = 'behaviorPack' | 'resourcePack' | 'skinPack' | 'worldTemplate';
+export type TPackTypeId = 'behaviorPack' | 'resourcePack' | 'skinPack' | 'worldTemplate';
 export declare abstract class PackType<TSetupArg> {
     protected projectConfig: ProjectConfig | undefined;
     protected packTypes: IPackType[];
