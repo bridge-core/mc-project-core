@@ -9,7 +9,7 @@ export default defineConfig({
 			fileName: (format) => `mc-project-core.${format}.js`,
 		},
 		rollupOptions: {
-			external: ['json5', 'path-browserify', 'bridge-common-utils'],
+			external: ['json5', 'path-browserify', '@bridge-editor/common-utils'],
 		},
 	},
 })
