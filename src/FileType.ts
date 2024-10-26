@@ -1,6 +1,6 @@
 import type { ProjectConfig } from './ProjectConfig'
 import type { TPackTypeId } from './PackType'
-import { extname, join } from 'path-browserify'
+import { join, sep, extname } from 'pathe'
 import json5 from 'json5'
 import { hasAnyPath } from '@bridge-editor/common-utils'
 
@@ -250,13 +250,16 @@ export abstract class FileType<TSetupArg> {
 			scope: string | string[],
 			packId: TPackTypeId
 		) => {
-			let startPath = Array.isArray(scope) ? scope[0] : scope
-			if (!startPath.endsWith('/')) startPath += '/'
-
+			let startPath = Array.isArray(scope) ? scope[0] : scope;
+		
 			const packPath =
-				this.projectConfig?.getAbsolutePackRoot(packId) ?? './unknown'
+				this.projectConfig?.getAbsolutePackRoot(packId) ?? './unknown';
+			let fullPath = join(packPath, startPath);
+			if (!fullPath.endsWith(sep)) {
+				fullPath += sep;
+			}
 
-			return join(packPath, startPath)
+			return fullPath;
 		}
 
 		const extension = `.${fileHandle.name.split('.').pop()!}`
