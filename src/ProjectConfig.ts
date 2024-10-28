@@ -203,9 +203,9 @@ export abstract class ProjectConfig {
 
 		return join(
 			this.basePath,
-			this.getRelativePackRoot(packId!),
-			filePath ?? ''
-		);
+			`${this.getRelativePackRoot(packId!)}/${filePath}`
+		)
+
 	}
 	getAvailablePackPaths() {
 		const paths: string[] = []

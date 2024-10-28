@@ -1,4 +1,4 @@
-import { join, extname, sep } from "pathe";
+import { join, extname } from "pathe";
 import json5 from "json5";
 import { hasAnyPath } from "@bridge-editor/common-utils";
 const defaultPackPaths = {
@@ -37,8 +37,7 @@ class ProjectConfig {
       return join(this.basePath, this.getRelativePackRoot(packId));
     return join(
       this.basePath,
-      this.getRelativePackRoot(packId),
-      filePath != null ? filePath : ""
+      `${this.getRelativePackRoot(packId)}/${filePath}`
     );
   }
   getAvailablePackPaths() {
@@ -224,12 +223,10 @@ class FileType {
     const getStartPath = (scope, packId) => {
       var _a2, _b;
       let startPath = Array.isArray(scope) ? scope[0] : scope;
+      if (!startPath.endsWith("/"))
+        startPath += "/";
       const packPath = (_b = (_a2 = this.projectConfig) == null ? void 0 : _a2.getAbsolutePackRoot(packId)) != null ? _b : "./unknown";
-      let fullPath = join(packPath, startPath);
-      if (!fullPath.endsWith(sep)) {
-        fullPath += sep;
-      }
-      return fullPath;
+      return join(packPath, startPath);
     };
     const extension = `.${fileHandle.name.split(".").pop()}`;
     const validTypes = this.all.filter(({ detect }) => {
