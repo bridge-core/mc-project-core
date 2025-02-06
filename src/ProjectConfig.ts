@@ -1,5 +1,5 @@
 import type { TPackTypeId } from './PackType'
-import { join } from 'path-browserify'
+import { join } from 'pathe'
 
 export interface IConfigJson {
 	/**
@@ -205,6 +205,7 @@ export abstract class ProjectConfig {
 			this.basePath,
 			`${this.getRelativePackRoot(packId!)}/${filePath}`
 		)
+
 	}
 	getAvailablePackPaths() {
 		const paths: string[] = []

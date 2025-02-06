@@ -1,4 +1,4 @@
-import { join, extname } from "path-browserify";
+import { join, extname } from "pathe";
 import json5 from "json5";
 import { hasAnyPath } from "@bridge-editor/common-utils";
 const defaultPackPaths = {
